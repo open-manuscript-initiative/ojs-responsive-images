@@ -1,0 +1,26 @@
+msgid "plugins.generic.responsiveImages.displayName"
+msgstr "Reszponzív képek"
+
+msgid "plugins.generic.responsiveImages.description"
+msgstr "WebP képméret-variánsokat generál és srcset/sizes attribútumokat készít az OJS public képeihez."
+
+msgid "plugins.generic.responsiveImages.settings.description"
+msgstr "A korábban feltöltött képek utólagos optimalizálása. Az első verzió a public/journals mappában található JPG, PNG és WebP képeket vizsgálja."
+
+msgid "plugins.generic.responsiveImages.environment"
+msgstr "Szerverkörnyezet"
+
+msgid "plugins.generic.responsiveImages.dryRun"
+msgstr "Száraz futás"
+
+msgid "plugins.generic.responsiveImages.generate"
+msgstr "Képméretek generálása"
+
+msgid "plugins.generic.responsiveImages.clearManifest"
+msgstr "Manifest törlése"
+
+msgid "plugins.generic.responsiveImages.clearManifest.done"
+msgstr "A manifest törlése megtörtént."
+
+msgid "plugins.generic.responsiveImages.warning"
+msgstr "Első használat előtt készíts biztonsági mentést a public/journals mappáról. A bővítmény az eredeti képeket nem írja felül."

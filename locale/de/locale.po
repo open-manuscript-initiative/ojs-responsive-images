@@ -1,0 +1,26 @@
+msgid "plugins.generic.responsiveImages.displayName"
+msgstr "Responsive Bilder"
+
+msgid "plugins.generic.responsiveImages.description"
+msgstr "Erzeugt WebP-Bildvarianten und srcset/sizes-Attribute für öffentliche OJS-Bilder."
+
+msgid "plugins.generic.responsiveImages.settings.description"
+msgstr "Optimiert bereits hochgeladene Bilder nachträglich. Die erste Version durchsucht JPG-, PNG- und WebP-Dateien in public/journals."
+
+msgid "plugins.generic.responsiveImages.environment"
+msgstr "Serverumgebung"
+
+msgid "plugins.generic.responsiveImages.dryRun"
+msgstr "Testlauf"
+
+msgid "plugins.generic.responsiveImages.generate"
+msgstr "Bildgrößen erzeugen"
+
+msgid "plugins.generic.responsiveImages.clearManifest"
+msgstr "Manifest löschen"
+
+msgid "plugins.generic.responsiveImages.clearManifest.done"
+msgstr "Das Manifest wurde gelöscht."
+
+msgid "plugins.generic.responsiveImages.warning"
+msgstr "Erstellen Sie vor der ersten Verwendung eine Sicherung von public/journals. Das Plugin überschreibt keine Originalbilder."

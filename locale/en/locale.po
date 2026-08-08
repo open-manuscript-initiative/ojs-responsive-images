@@ -1,0 +1,26 @@
+msgid "plugins.generic.responsiveImages.displayName"
+msgstr "Responsive Images"
+
+msgid "plugins.generic.responsiveImages.description"
+msgstr "Generates WebP image variants and prepares srcset/sizes attributes for OJS public images."
+
+msgid "plugins.generic.responsiveImages.settings.description"
+msgstr "Backfill previously uploaded images. The first version scans JPG, PNG and WebP files in public/journals."
+
+msgid "plugins.generic.responsiveImages.environment"
+msgstr "Server environment"
+
+msgid "plugins.generic.responsiveImages.dryRun"
+msgstr "Dry run"
+
+msgid "plugins.generic.responsiveImages.generate"
+msgstr "Generate image sizes"
+
+msgid "plugins.generic.responsiveImages.clearManifest"
+msgstr "Clear manifest"
+
+msgid "plugins.generic.responsiveImages.clearManifest.done"
+msgstr "The manifest has been cleared."
+
+msgid "plugins.generic.responsiveImages.warning"
+msgstr "Before first use, back up public/journals. The plugin does not overwrite original images."

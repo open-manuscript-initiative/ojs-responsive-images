@@ -1,4 +1,4 @@
-name: Build PKP Plugin Package
+name: Build and Publish PKP Plugin Package
 
 on:
   push:
@@ -7,15 +7,35 @@ on:
   workflow_dispatch:
 
 permissions:
-  contents: read
+  contents: write
 
 jobs:
   package:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
 
-      - name: Build installable archive
+      - name: Resolve and validate version
+        shell: bash
+        run: |
+          set -euo pipefail
+          XML_VERSION="$(php -r '$xml=simplexml_load_file("version.xml"); echo trim((string)$xml->release);')"
+          if [ "${GITHUB_EVENT_NAME}" = "push" ]; then
+            VERSION="${GITHUB_REF_NAME#v}"
+          else
+            VERSION="$XML_VERSION"
+          fi
+          if [ "$VERSION" != "$XML_VERSION" ]; then
+            echo "Release version $VERSION does not match version.xml release $XML_VERSION" >&2
+            exit 1
+          fi
+          echo "VERSION=$VERSION" >> "$GITHUB_ENV"
+          echo "TAG=v$VERSION" >> "$GITHUB_ENV"
+          echo "ARCHIVE=responsiveImages-$VERSION.tar.gz" >> "$GITHUB_ENV"
+
+      - name: Build installable archive and checksum
         shell: bash
         run: |
           set -euo pipefail
@@ -24,18 +44,37 @@ jobs:
             --exclude '.git' \
             --exclude '.github' \
             --exclude 'build'
-          tar -C build -czf build/responsiveImages.tar.gz responsiveImages
+          tar -C build -czf "build/$ARCHIVE" responsiveImages
+          md5sum "build/$ARCHIVE" > "build/$ARCHIVE.md5"
 
       - name: Verify archive layout
         shell: bash
         run: |
           set -euo pipefail
-          tar -tzf build/responsiveImages.tar.gz | grep -q '^responsiveImages/version.xml$'
-          tar -tzf build/responsiveImages.tar.gz | grep -q '^responsiveImages/index.php$'
-          tar -tzf build/responsiveImages.tar.gz | grep -q '^responsiveImages/ResponsiveImagesPlugin.php$'
+          tar -tzf "build/$ARCHIVE" | grep -q '^responsiveImages/version.xml$'
+          tar -tzf "build/$ARCHIVE" | grep -q '^responsiveImages/index.php$'
+          tar -tzf "build/$ARCHIVE" | grep -q '^responsiveImages/ResponsiveImagesPlugin.php$'
 
-      - uses: actions/upload-artifact@v4
+      - name: Upload workflow artifact
+        uses: actions/upload-artifact@v4
         with:
-          name: responsiveImages-pkp-plugin
-          path: build/responsiveImages.tar.gz
+          name: responsiveImages-pkp-plugin-${{ env.VERSION }}
+          path: |
+            build/${{ env.ARCHIVE }}
+            build/${{ env.ARCHIVE }}.md5
           if-no-files-found: error
+
+      - name: Publish assets to GitHub release
+        shell: bash
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          set -euo pipefail
+          if ! gh release view "$TAG" >/dev/null 2>&1; then
+            echo "GitHub release $TAG does not exist." >&2
+            exit 1
+          fi
+          gh release upload "$TAG" \
+            "build/$ARCHIVE" \
+            "build/$ARCHIVE.md5" \
+            --clobber

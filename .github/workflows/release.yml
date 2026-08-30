@@ -1,0 +1,41 @@
+name: Build PKP Plugin Package
+
+on:
+  push:
+    tags:
+      - 'v*'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  package:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Build installable archive
+        shell: bash
+        run: |
+          set -euo pipefail
+          mkdir -p build/responsiveImages
+          rsync -a ./ build/responsiveImages/ \
+            --exclude '.git' \
+            --exclude '.github' \
+            --exclude 'build'
+          tar -C build -czf build/responsiveImages.tar.gz responsiveImages
+
+      - name: Verify archive layout
+        shell: bash
+        run: |
+          set -euo pipefail
+          tar -tzf build/responsiveImages.tar.gz | grep -q '^responsiveImages/version.xml$'
+          tar -tzf build/responsiveImages.tar.gz | grep -q '^responsiveImages/index.php$'
+          tar -tzf build/responsiveImages.tar.gz | grep -q '^responsiveImages/ResponsiveImagesPlugin.php$'
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: responsiveImages-pkp-plugin
+          path: build/responsiveImages.tar.gz
+          if-no-files-found: error

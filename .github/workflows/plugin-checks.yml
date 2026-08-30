@@ -1,0 +1,52 @@
+name: PKP Plugin Checks
+
+on:
+  push:
+  pull_request:
+
+permissions:
+  contents: read
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Validate required plugin files
+        shell: bash
+        run: |
+          set -euo pipefail
+          required=(
+            index.php
+            ResponsiveImagesPlugin.php
+            version.xml
+            README.md
+            LICENSE
+            locale/en/locale.po
+          )
+          for file in "${required[@]}"; do
+            test -f "$file" || { echo "Missing required file: $file"; exit 1; }
+          done
+
+      - name: Validate version.xml metadata
+        shell: bash
+        run: |
+          set -euo pipefail
+          grep -q '<application>responsiveImages</application>' version.xml
+          grep -q '<type>plugins.generic</type>' version.xml
+          grep -q '<class>ResponsiveImagesPlugin</class>' version.xml
+          grep -Eq '<release>[0-9]+\.[0-9]+\.[0-9]+\.[0-9]+</release>' version.xml
+
+      - name: Validate plugin entry point
+        shell: bash
+        run: |
+          set -euo pipefail
+          grep -q 'ResponsiveImagesPlugin' index.php
+          grep -q 'extends GenericPlugin' ResponsiveImagesPlugin.php
+
+      - name: Reject common release artifacts
+        shell: bash
+        run: |
+          set -euo pipefail
+          ! find . -type f \( -name '.DS_Store' -o -name '*.log' -o -name '*.tmp' -o -name 'responsive-images-manifest.json' \) -print -quit | grep -q .

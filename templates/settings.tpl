@@ -14,16 +14,19 @@
     <p><strong>Manifest útvonal:</strong><br>{$manifestPath|escape}</p>
 
     <form method="post" action="{$pluginBaseUrl|escape}">
+        {csrf}
         <input type="hidden" name="verb" value="dryRun">
         <button class="pkp_button" type="submit">{translate key="plugins.generic.responsiveImages.dryRun"}</button>
     </form>
 
     <form method="post" action="{$pluginBaseUrl|escape}">
+        {csrf}
         <input type="hidden" name="verb" value="scan">
         <button class="pkp_button" type="submit">{translate key="plugins.generic.responsiveImages.generate"}</button>
     </form>
 
     <form method="post" action="{$pluginBaseUrl|escape}">
+        {csrf}
         <input type="hidden" name="verb" value="clearManifest">
         <button class="pkp_button" type="submit">{translate key="plugins.generic.responsiveImages.clearManifest"}</button>
     </form>
